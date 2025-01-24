@@ -1,0 +1,7 @@
+name = "MakieStippling"
+uuid = "a2bd6b23-9ae5-5b43-94df-c047a0516ae5"
+authors = ["Benedikt Ehinger <benedikt.ehinger@vis.uni-stuttgart.de>"]
+version = "0.1.0"
+
+[compat]
+julia = "1.10"

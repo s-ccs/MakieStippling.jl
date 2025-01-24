@@ -1,0 +1,19 @@
+# Changes here will be overwritten by Copier
+AddCopierCI: false
+AnswerStrategy: recommended-ask
+Authors: Benedikt Ehinger <benedikt.ehinger@vis.uni-stuttgart.de>
+CheckExplicitImports: false
+CodeOfConductContact: benedikt.ehinger@vis.uni-stuttgart.de
+ConfigIndentation: 2
+JuliaIndentation: 4
+JuliaMinVersion: '1.10'
+License: MIT
+LicenseCopyrightHolders: Benedikt Ehinger
+MarkdownIndentation: 2
+PackageName: MakieStippling
+PackageOwner: s-ccs
+PackageUUID: a2bd6b23-9ae5-5b43-94df-c047a0516ae5
+RunJuliaNightlyOnCI: false
+UseCirrusCI: false
+_commit: v0.14.1
+_src_path: https://github.com/JuliaBesties/BestieTemplate.jl
