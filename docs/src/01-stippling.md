@@ -39,23 +39,31 @@ for k = 1:n_conditions
 
 end
 
+grid_densities = Vector(undef,n_conditions)
+for k = 1:n_conditions
+grid_densities[k] = Array{Float64}(undef,size(grid_combined))
+for x = 1:size(grid_density,1)
+for y = 1:size(grid_density,2)
 
-x,y = meshgrid(1:size(grid_combined,1),1:size(grid_combined,2))
-pts = Point2f.(x,y)
+grid_densities[k][x,y] =  MakieStippling.calculate_density(density_interpolators[k], (x,y))
+end
+end
+end
+
 
 fig = Figure()
 ax_dens = fig[1,1] = Axis(fig,title="underlying densities")
 hidespines!(ax_dens)
 hidedecorations!(ax_dens)
 for k = 1:n_conditions
-heatmap(fig[1,1][1,k],MakieStippling.calculate_density.(Ref(density_interpolators[k]),pts)')
+heatmap(fig[1,1][1,k],grid_densities[k])
 hidedecorations!(current_axis())
 end
 fig
 ```
 
 ```julia
-grid_single,sites_sets = MakieStippling.run_iterations!(grid_combined,sites,sites_grouping,density_interpolators;n_iter=3,threshold_low=10e-10,threshold_high=0.65*10-6)
+grid_single,sites_sets = MakieStippling.run_iterations!(grid_combined,sites,sites_grouping,grid_densities;n_iter=3,threshold_low=10e-10,threshold_high=0.65*10-6)
 
 
 site_set_to_point2f(s::Set) = [Point2f(k[1],k[2]) for k in MakieStippling.linearized_sites.(collect(s),Ref(size(grid_combined)))]
