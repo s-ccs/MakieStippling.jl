@@ -1,11 +1,13 @@
-# Don't forget to run
-#
-#     pkg> dev ..
-#
 [deps]
+CUDA = "052768ef-5323-5732-b1bb-66c8b64840ba"
+CairoMakie = "13f3f980-e62b-5c42-98c6-ff1f3baf88f0"
+DiscreteVoronoi = "01fd5c3e-b3b7-45fb-9d19-e82518019796"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 LiveServer = "16fef848-5104-11e9-1b77-fb7a48bbb589"
 MakieStippling = "a2bd6b23-9ae5-5b43-94df-c047a0516ae5"
+MeshGrid = "ebf956a0-ef5e-43be-9fb1-27952996e635"
+StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
+WGLMakie = "276b4fcb-3e11-5398-bf8b-a0c2d153d008"
 
 [compat]
 Documenter = "1"

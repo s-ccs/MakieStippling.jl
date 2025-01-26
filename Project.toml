@@ -3,5 +3,19 @@ uuid = "a2bd6b23-9ae5-5b43-94df-c047a0516ae5"
 authors = ["Benedikt Ehinger <benedikt.ehinger@vis.uni-stuttgart.de>"]
 version = "0.1.0"
 
+[deps]
+Atomix = "a9b6321e-bd34-4604-b9c9-b65b8de01458"
+Distances = "b4f34e82-e78d-54a5-968a-f98e89d6e8f7"
+Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
+Interpolations = "a98d9a8b-a2ab-59e6-89dd-64a1c18fca59"
+KernelAbstractions = "63c18a36-062a-441e-b654-da1e3ab1ce7c"
+Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
+
 [compat]
+Atomix = "1.0.1"
+Distances = "0.10.12"
+Distributions = "0.25.117"
+Interpolations = "0.15.1"
+KernelAbstractions = "0.9.33"
+Random = "1.11.0"
 julia = "1.10"
