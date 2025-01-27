@@ -90,7 +90,17 @@ function split_by_density!(
     grid_densities;
     threshold_low = 10e-7,
     threshold_high = 0.0000005,
+    markersize = 5,
+    hysteresis_a = 0.6,
 )
+    if !isnothing(hysteresis_a)
+        markerarea = 2 * π * markersize# TODO make adjustible/dynamic
+        threshold_low = (1 - hysteresis_a) * markerarea
+        threshold_high = (1 + hysteresis_a) * markerarea
+        @debug threshold_low, threshold_high
+
+
+    end
     n_conditions = length(grid_single)
     sites_combined = collect(reduce(union, sites_sets))
     areas_combined, centroids_combined = grid_features(grid_combined, sites_combined)
@@ -145,7 +155,7 @@ function split_by_density!(
             split += 1
 
             # split the cell in two
-            Δmove = (rand(2) .- 0.5) .* size(grid_combined) * 0.01
+            Δmove = (rand(2) .- 0.5) .* markersize * 2#markerarea * 10#size(grid_combined) #0.01
             for _tmp in eachcol([Δmove .-Δmove])
                 centroid_moved = move_centroid(centroid_new, _tmp, size(grid_combined))
                 p_new_int =

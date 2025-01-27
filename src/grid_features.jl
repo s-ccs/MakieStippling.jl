@@ -83,7 +83,7 @@ function grid_features(A::AbstractMatrix{<:Integer}, sites_set)
     )
     KernelAbstractions.synchronize(device)
 
-    return Vector(hist_counts) ./ *(size(A)...),
+    return Vector(hist_counts), #./ *(size(A)...), # uncomment to normalize
     vec2tuple.(Vector(centroids_x), Vector(centroids_y))
 end
 vec2tuple(x, y) = (x, y)

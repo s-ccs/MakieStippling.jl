@@ -9,7 +9,7 @@ using KernelAbstractions
 
 using Atomix
 
-
+using MakieCore
 
 include("jfa_voronoi.jl")
 include("grid_features.jl")
