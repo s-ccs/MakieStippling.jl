@@ -25,30 +25,11 @@ nothing #hide
 create an arbitrary density function
 
 ```julia
-times = collect(range(0,size(grid_combined,1),length=5))
-density_interpolators = Vector{Any}(undef,n_conditions)
-max_density = 1
-for k = 1:n_conditions
-    mean_data = rand(MersenneTwister(k),5).*size(grid,1)/4 .+ size(grid,1)/2
-    std_data = [20,10,5,15,30.]#abs.(rand(MersenneTwister(k*2),5)).*size(grid,1)
+include("../simulate_densities.jl")
+grid_densities = simulate_densities(timepoints = 5,grid_sz = size(grid_combined),n_conditions=2)
+```
 
-    itp_mean = MakieStippling.Interpolations.interpolate((times,), mean_data, MakieStippling.Interpolations.Gridded(MakieStippling.Interpolations.Linear()))
-    itp_std = MakieStippling.Interpolations.interpolate((times,), std_data, MakieStippling.Interpolations.Gridded(MakieStippling.Interpolations.Linear()))
-
-    density_interpolators[k] = MakieStippling.DensityInterpolator(itp_mean,itp_std,max_density)
-
-end
-
-grid_densities = Vector(undef,n_conditions)
-for k = 1:n_conditions
-grid_densities[k] = Array{Float64}(undef,size(grid_combined))
-for x = 1:size(grid_density,1)
-for y = 1:size(grid_density,2)
-
-grid_densities[k][x,y] =  MakieStippling.calculate_density(density_interpolators[k], (x,y))
-end
-end
-end
+```julia
 
 
 fig = Figure()

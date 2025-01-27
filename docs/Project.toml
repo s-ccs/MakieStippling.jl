@@ -7,6 +7,7 @@ LiveServer = "16fef848-5104-11e9-1b77-fb7a48bbb589"
 MakieStippling = "a2bd6b23-9ae5-5b43-94df-c047a0516ae5"
 MeshGrid = "ebf956a0-ef5e-43be-9fb1-27952996e635"
 StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
+TestImages = "5e47fb64-e119-507b-a336-dd2b206d9990"
 WGLMakie = "276b4fcb-3e11-5398-bf8b-a0c2d153d008"
 
 [compat]
