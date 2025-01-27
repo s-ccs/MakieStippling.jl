@@ -115,10 +115,6 @@ function split_by_density!(
     for (ix, p) in enumerate(sites_combined)
         #---
         # calculate the required centroids / areas
-        #centroid_combined, area_combined = grid_features(grid_combined,p)
-        #calculate_density(density_interpolator, centroids_single[k][ix])
-        #@show ix, centroids_single[1][ix]
-
         densities = Vector{Float64}(undef, n_conditions)
         for k = 1:n_conditions
             centroid_index = centroids_single_linearized[k][ix]
@@ -130,25 +126,19 @@ function split_by_density!(
             densities[k] = grid_densities[k][centroid_index] * areas_single[k][ix]
         end
 
-        #@show densities
+
         density_argmax = argmax(densities)
         density_selected = densities[density_argmax]
         centroid_selected = centroids_single[density_argmax][ix]
 
         probability = sum(densities) - density_selected
-        #@debug probability
         centroid_new = (probability < rand()) ? centroid_selected : centroids_combined[ix]
 
-        #@debug "centroids sel/comb" centroid_selected centroids_combined[ix]
-        #@debug density_selected
+
         [delete!(sites_sets[k], p) for k = 1:length(densities)]
         #if centroid_new in sites)
         if density_selected < threshold_low
             remove += 1
-            #@show "let's only remove..."
-            # remove it
-            #delete!(sites_sets[density_argmax],p)
-            #[delete!(sites_sets[k],p) for k = 1:length(densities)]
 
         elseif density_selected > threshold_high
             #@show "splitting it"
@@ -158,21 +148,11 @@ function split_by_density!(
             Δmove = (rand(2) .- 0.5) .* size(grid_combined) * 0.01
             for _tmp in eachcol([Δmove .-Δmove])
                 centroid_moved = move_centroid(centroid_new, _tmp, size(grid_combined))
-
-                #LinearIndices(size(grid_combined))[centroid_new.+_tmp]#
-                #p_new = linearized_sites([centroid_new.+_tmp],size(grid_combined))[1] # within 1% of the centroid_new
                 p_new_int =
                     LinearIndices(size(grid_combined))[centroid_moved[1], centroid_moved[2]]
 
-                #@debug "split centroids:" centroid_new,linearized_sites(p_new_int,size(grid_combined))
-                #@debug "pushing " p_new_int
                 push!(sites_sets[density_argmax], p_new_int)
-                #@show centroid_new.+_tmp
-                #@show p_new_int
-                #@show linearized_sites(p_new_int,size(grid_combined))
             end
-
-            #push!(sites_sets[density_argmax],Int(round(linearized_sites([centroid_new],size(grid_combined))[1])))
 
         else
             # keep it around, move to selected
@@ -182,7 +162,7 @@ function split_by_density!(
                 sites_sets[density_argmax],
                 LinearIndices(size(grid_combined))[centroid_new[1], centroid_new[2]],
             )
-            #push!(sites_sets[density_argmax],Int(round(linearized_sites([centroid_new],size(grid_combined))[1])))
+
 
         end
 
