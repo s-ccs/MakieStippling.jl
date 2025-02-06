@@ -17,24 +17,86 @@ n_conditions = 2
 sites_grouping = rand(1:n_conditions,n_sites)
 
 
-grid = Int.(zeros(500,500))
-grid_combined = CuArray(grid)
-sites = CartesianIndices(size(grid))[rand(1:length(grid),n_sites)]
+
+grid_combined, grid_singles, sites =
+        setup(grid_densities, 100)
+
 ```
 
 ```julia
 include("../simulate_densities.jl")
-n_conditions = 2
-grid_densities = simulate_densities(;timepoints = 10,grid_sz = size(grid_combined),n_conditions)
+n_conditions = 3
+grid_densities = CuArray.(simulate_densities(;timepoints = 10,grid_sz = (500,500),n_conditions))
+colors = [:red,:green,:blue]
+#---
+#using TestImages
+grid_densities = [CuArray(Float32.(1 .-rotr90(testimage("cameraman")))),CuArray(Float32.(rotr90(testimage("cameraman"))))]
+colors = [:black,:white]
 
-#grid_densities = [testimage("cameraman")]
+#---
+_X = testimage("toucan")
+using ImageTransformations
+percentage_scale = 5
+new_size = trunc.(Int, size(_X) .* percentage_scale)
+X = rotr90(imresize(_X, new_size))
+
+# exract a colorscheme
+n = tempname()*".jpg";save(n,X)
+colors = extract(n,5,25,0.1)
+using Colors
+function extract_color(X,color)
+out = Colors.colordiff.(color,RGB.(X))
+
+#out = out ./ maximum(out)
+return Float32.(out)
+end
+colordiffs = extract_color.(Ref(X),colors)
+m = maximum(maximum.(colordiffs))
+X_cd = map(x->1 .-x./m,colordiffs)
+X_cd = map(x-> (alpha.(X)).*x,X_cd)
+grid_densities = CuArray.(X_cd)
+
+
+#grid_densities = [CuArray(Float32.(rotr90(getproperty.(X,:r)))),
+#                  CuArray(Float32.(rotr90(getproperty.(X,:g)))),
+#                  CuArray(Float32.(rotr90(getproperty.(X,:b))))]
+```
+
+```julia
+trig = Observable(20)
+stipplemap(grid_densities;
+    colors=colors[end:-1:1],
+    density_factor=0.2,
+    hysteresis=0.95,
+    markersize=5,
+
+    axis=(;aspect=1,limits=((0,size(grid_densities[1],1)),(0,size(grid_densities[1],2)))),
+    one_more_iteration=trig)
 ```
 
 run setup without iterations
 
 ```julia
-grid_singles,sites_sets = MakieStippling.run_iterations!(grid_combined,sites,sites_grouping,grid_densities;
-        n_iter=0)
+
+grid_combined, grid_singles, sites =
+        MakieStippling.setup(grid_densities, 100)
+MakieStippling.jfa_voronoi_gpu!(grid_combined, collect(reduce(union, to_value.(sites))))
+n_groups = length(grid_densities)
+[MakieStippling.jfa_voronoi_gpu!(grid_singles[k], collect(to_value(sites[k]))) for k = 1:n_groups]
+
+
+_sites = Set.(MakieStippling.linearized_sites.(collect.(to_value.(sites)), Ref(size(grid_combined))))
+
+@run MakieStippling.one_iteration!(
+            grid_combined,
+            grid_singles,
+            _sites,
+            to_value(grid_densities);
+            markersize = 5,
+            hysteresis_a = 0.8
+        )
+
+
 ```
 
 setup `Observables.jl` to quickly update the plot

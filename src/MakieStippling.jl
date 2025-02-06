@@ -9,11 +9,13 @@ using KernelAbstractions
 
 using Atomix
 
-using MakieCore
+using Makie
 
 include("jfa_voronoi.jl")
 include("grid_features.jl")
 include("density.jl")
 include("stippling.jl")
+include("stipplemap.jl")
 
+export stipplemap, stipplemap!
 end
